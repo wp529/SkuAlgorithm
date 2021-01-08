@@ -1,0 +1,3 @@
+include ':sku-algorithm'
+include ':app'
+rootProject.name = "SkuAlgorithm"
