@@ -38,16 +38,16 @@
 
 ```json
 {
-	"skuList":[{
-    "skuId":"xxx",
-    "storageCount":100,
-    "skuPrice":19.99,
-    //购买上限
-    "upperLimitCount":10,
-    //此字段表示构成这个sku的规格id组合,配合上表为红色,S,5斤,套餐1，此字段表现形式多种，大同小异
-    "specCombinationId":"1001|2001|3001|4001"
-  }],
-  "specGroup":[
+   "skuList":[{
+        "skuId":"xxx",
+        "storageCount":100,
+        "skuPrice":19.99,
+        //购买上限
+        "upperLimitCount":10,
+        //此字段表示构成这个sku的规格id组合,配合上表为红色,S,5斤,套餐1，此字段表现形式多种，大同小异
+        "specCombinationId":"1001|2001|3001|4001"
+    }],,
+   "specGroup":[
     {
       "specGroupId":"101",
       "specGroupName":"颜色",
