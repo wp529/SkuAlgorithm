@@ -115,7 +115,7 @@ allprojects {
    }
 }
 dependencies {
-
+    implementation 'com.github.wp529:SkuAlgorithm:1.0.0'
 }
 ```
 
