@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/wp529/SkuAlgorithm.svg)](https://jitpack.io/#wp529/SkuAlgorithm)
 ### 实现效果
 
 一维规格实现
