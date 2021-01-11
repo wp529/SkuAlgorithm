@@ -47,12 +47,16 @@ abstract class BaseCalculator constructor(
 
     /**
      * 设置选中某个sku,会回调onSelectSku
-     * 这里没有处理传入的sku在skuList里不存在的情况,由调用方自行处理,这种情况是想选中随便一个Sku还是啥操作都不做还是想干其他啥都可以自行实现
+     * 这里没有处理传入的sku在skuList里不存在或者不能选中的情况,由调用方自行处理,这种情况是想选中随便一个Sku还是啥操作都不做还是想干其他啥都可以自行实现
      * @param sku 选中的sku
+     * @param doWhenSkuCanNotBeSelected 如果sku不能被选中的处理回调,回调返回true则表明你已自行处理选中哪些规格,并需要根据你的处理计算一次
      */
-    fun setSkuSelect(sku: ISku) {
-        if (skuList.find { it.skuId() == sku.skuId() } == null) {
-            //传入的sku在skuList里都不存在,那么不处理,直接return回去
+    @JvmOverloads
+    fun setSkuSelect(sku: ISku, doWhenSkuCanNotBeSelected: ((sku: ISku) -> Unit)? = null) {
+        val selectedSku = skuList.find { it.skuId() == sku.skuId() }
+        if (selectedSku == null || selectedSku.skuCanNotBeSelected()) {
+            //传入的sku在skuList里不存在或者不能选中,那么回调回去让调用方处理
+            doWhenSkuCanNotBeSelected?.invoke(sku)
             return
         }
         sku.skuCombinationSpecIdArray().forEach { selectSpecId ->
@@ -75,6 +79,9 @@ abstract class BaseCalculator constructor(
         calculateDone: (() -> Unit)? = null
     ) {
         if (select) {
+            if (!spec.specCanBeSelected) {
+                return
+            }
             //从未选中变为选中,把同组的spec都置为未选中
             specArray.filter { it.specInGroupId == spec.specInGroupId }.forEach {
                 it.specSelect = false
@@ -91,7 +98,7 @@ abstract class BaseCalculator constructor(
      */
     private fun calculateSku() {
         //找出当前所有被选中的规格
-        val selectSpec = specArray.filter { it.specSelect }
+        val selectSpec = specArray.filter { it.specSelect && it.specCanBeSelected }
         if (selectSpec.isEmpty()) {
             //一个都没选中
             if (noneSelectedSpecNeedChangeCanBeSelectedState) {

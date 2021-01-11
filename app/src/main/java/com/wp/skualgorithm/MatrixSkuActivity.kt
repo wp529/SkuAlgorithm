@@ -65,6 +65,28 @@ class MatrixSkuActivity : AppCompatActivity() {
         ).apply {
             onSelectSku = this@MatrixSkuActivity.onSelectSku
         }
+        //选中的Sku不存在,一般业务场景是在商品详情页唤起规格选择弹窗时需要默认选中当前Sku,但此Sku被下架了
+        skuCalculator.setSkuSelect(
+            Sku(
+                skuId = "10019",
+                storageCount = 20,
+                specCombinationId = "1001|2002|3001|4003",
+                skuPrice = "39.99",
+                skuImageUrl = "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3414292365,3872598300&fm=26&gp=0.jpg",
+                upperLimitCount = 20,
+                lowerLimitCount = 2
+            )
+        ) {
+            it.skuCombinationSpecIdArray().forEach { specId ->
+                specGroupList.forEach { specGroup ->
+                    specGroup.specList.forEach { spec ->
+                        if (spec.specId == specId && spec.specCanBeSelected) {
+                            skuCalculator.specSelectStateChanged(spec, true)
+                        }
+                    }
+                }
+            }
+        }
         //可以自行选择怎么实现规格选择UI,我选择使用RV实现的规格选择列表
         rvSpecList.adapter = SpecListAdapter(specGroupList).apply {
             onSpecClickListener = {
